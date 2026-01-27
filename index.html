@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyro - Discord Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(155, 89, 182, 0.3);
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border: 2px solid #9b59b6;
+        }
+
+        .logo-fallback {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(155, 89, 182, 0.3);
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            font-weight: 900;
+            color: white;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #9b59b6, #c39bd3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 20px;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .join-btn {
+            display: inline-block;
+            background: #9b59b6;
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        .join-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6);
+        }
+
+        .main-grid {
+            display: block;
+            margin-top: 40px;
+        }
+
+        .sidebar {
+            background: #141414;
+            padding: 30px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #9b59b6;
+            font-weight: 600;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar li:hover {
+            background: #222;
+            border-left-color: #9b59b6;
+            transform: translateX(4px);
+        }
+
+        .content {
+            background: #141414;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #9b59b6;
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 17px;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .category {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            transition: all 0.3s;
+        }
+
+        .category:hover {
+            border-color: #9b59b6;
+            transform: translateY(-2px);
+        }
+
+        .category h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category ul {
+            list-style: none;
+        }
+
+        .category li {
+            padding: 8px 0;
+            color: #aaa;
+            font-size: 15px;
+            border-bottom: 1px solid #252525;
+        }
+
+        .category li:last-child {
+            border-bottom: none;
+        }
+
+        .contributors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contributor {
+            background: #1a1a1a;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            font-size: 15px;
+            color: #ddd;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .contributor:hover {
+            border-color: #9b59b6;
+            transform: translateY(-2px);
+        }
+
+        .contributor-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            background: #1a1a1a;
+            border: 2px solid #9b59b6;
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .contributor:hover .contributor-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .contributor-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #9b59b6;
+        }
+
+        .tooltip-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: block;
+            border: 2px solid #9b59b6;
+        }
+
+        .tooltip-info {
+            text-align: center;
+        }
+
+        .tooltip-username {
+            font-size: 14px;
+            color: #9b59b6;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-discord {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a, #252525);
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .cta-section h2 {
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+            }
+
+            .logo {
+                width: 140px;
+                height: 140px;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kyro</h1>
+            <p class="tagline">Your gaming resource hub</p>
+            <a href="https://discord.gg/g4CeTGwYxD" class="join-btn">Join Discord</a>
+        </div>
+
+        <div class="main-grid">
+            <main class="content">
+                <div class="section">
+                    <h2>What is Kyro?</h2>
+                    <p class="description">Kyro is a Discord community providing access to gaming tools, emulators, ROM sources, and scripting resources. Join us to enhance your gaming experience.</p>
+                </div>
+
+                <div class="section">
+                    <h2>Resources</h2>
+                    <p class="description">Access hundreds of tools, mods, emulators, and resources. Everything you need in one place.</p>
+                    <div class="categories">
+                        <div class="category">
+                            <h3>Gaming Tools</h3>
+                            <ul>
+                                <li>Wemod</li>
+                                <li>Cheat Engine</li>
+                                <li>Fling Trainer</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h3>Discord Utilities</h3>
+                            <ul>
+                                <li>Discord Auto Quest</li>
+                                <li>Vencord</li>
+                                <li>Raid-Bot</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h3>Web Tools</h3>
+                            <ul>
+                                <li>Catto.xd Webports</li>
+                                <li>Browser Apps</li>
+                                <li>Online Tools</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h3>Emulators</h3>
+                            <ul>
+                                <li>Ryujinx</li>
+                                <li>Dolphin</li>
+                                <li>PCSX2</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h3>ROM Sources</h3>
+                            <ul>
+                                <li>Vimm's Vault</li>
+                                <li>Axekin</li>
+                                <li>Romheaven</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+
+                        <div class="category">
+                            <h3>Script Hubs</h3>
+                            <ul>
+                                <li>CattoHub</li>
+                                <li>Xeno</li>
+                                <li>RoScripts</li>
+                                <li>+ many more</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Contributors</h2>
+                    <div class="contributors">
+                        <div class="contributor">
+                            Catto
+                            <div class="contributor-tooltip">
+                                <img src="https://raw.githubusercontent.com/kyro-scripts/kyro/main/128532f2564319e61f01a3e2b521eeee.jpg" alt="Catto" class="tooltip-avatar">
+                                <div class="tooltip-info">
+                                    <div class="tooltip-username">Damncatto</div>
+                                    <div class="tooltip-discord">Discord: Damncatto</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contributor">
+                            MrJoosbox
+                            <div class="contributor-tooltip">
+                                <img src="https://raw.githubusercontent.com/kyro-scripts/kyro/main/download%20(1).jpg" alt="MrJoosbox" class="tooltip-avatar">
+                                <div class="tooltip-info">
+                                    <div class="tooltip-username">MrJoosBox7527</div>
+                                    <div class="tooltip-discord">Discord: MrJoosBox7527</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contributor">
+                            Corex
+                            <div class="contributor-tooltip">
+                                <img src="https://raw.githubusercontent.com/kyro-scripts/kyro/main/meth_logo.png" alt="Corex" class="tooltip-avatar">
+                                <div class="tooltip-info">
+                                    <div class="tooltip-username">611v</div>
+                                    <div class="tooltip-discord">Discord: 611v</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contributor">
+                            TJ
+                            <div class="contributor-tooltip">
+                                <img src="https://raw.githubusercontent.com/kyro-scripts/kyro/main/e6ff5bd618c758ba37b6c776505e653b.png" alt="TJ" class="tooltip-avatar">
+                                <div class="tooltip-info">
+                                    <div class="tooltip-username">tjgta4</div>
+                                    <div class="tooltip-discord">Discord: tjgta4</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contributor">
+                            q8j
+                            <div class="contributor-tooltip">
+                                <img src="https://raw.githubusercontent.com/kyro-scripts/kyro/main/032f4a2b4c320443dc3620f6e695a9a2.png" alt="q8j" class="tooltip-avatar">
+                                <div class="tooltip-info">
+                                    <div class="tooltip-username">q8j.__</div>
+                                    <div class="tooltip-discord">Discord: q8j.__</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 25px; color: #aaa; font-size: 15px;">Contact: <a href="mailto:Kyro.exploiting@gmail.com" style="color: #9b59b6; text-decoration: none;">Kyro.exploiting@gmail.com</a></p>
+                </div>
+
+                <div class="section">
+                    <div class="cta-section">
+                        <h2>Join Kyro Today</h2>
+                        <p>Connect with the community and access all resources</p>
+                        <a href="https://discord.gg/g4CeTGwYxD" class="join-btn">Join Discord Server</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
